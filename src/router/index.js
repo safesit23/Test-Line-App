@@ -1,15 +1,41 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Index from "../views/index.vue";
+//Staff
+import Staff from "../views/staff.vue";
+import StaffRegister from "../components/Staff/register.vue";
+import StaffJoin from "../components/Staff/join.vue";
 
-Vue.use(Router)
+Vue.use(VueRouter);
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
-  ]
-})
+const routes = [
+  {
+    path: "/",
+    name: "Home",
+    component: Index
+  },
+  {
+    path: "/staff",
+    name: "Staff",
+    component: Staff,
+    children: [
+      {
+        path: "join",
+        name: "StaffJoin",
+        component: StaffJoin
+      },
+      {
+        path: "register",
+        name: "StaffRegister",
+        component: StaffRegister
+      }
+    ]
+  }
+];
+
+const router = new VueRouter({
+  mode: "history",
+  routes
+});
+
+export default router;
