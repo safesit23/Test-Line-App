@@ -55,14 +55,12 @@ export default {
     console.log("created-Line");
     this.$liff
       .init({
-        liffId: "1653855652-eXWXyM06"
+        liffId: `${process.env.VUE_APP_LIFF_ID}`
       })
       .then(() => {
         console.log("isInClient: " + liff.isInClient());
         if (!liff.isLoggedIn()) {
-          liff.login({
-            redirectUri: "https://xentric.safe.in.th/staff?eventid=1"
-          });
+          liff.login();
         }
         // const medium = "https://medium.com/linedevth/";
         // const queryString = decodeURIComponent(window.location.search).replace(
