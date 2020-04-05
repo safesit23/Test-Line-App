@@ -72,13 +72,14 @@ export default {
     initApi() {
       try {
         console.log("initApi");
-        if (this.eventId = 555) {
+        if (this.eventId == 555) {
           console.log("InitApi: has userId");
           const newPath = `${process.env.VUE_APP_WEB_URL}/staff/join?eventid=${this.eventId}`;
           console.log(newPath);
           window.location.assign(newPath)
         } else {
           console.log("InitApi: not has userId");
+          window.location.assign("https://www.google.com")
         }
       } catch (error) {
         console.log("initApi error");

@@ -2,13 +2,13 @@
   <b-container fluid>
     <b-row align-h="center">
       <h2>Test Staff Flow</h2>
-      <h5 style="color:blue">ver 13.5</h5>
+      <h5 style="color:blue">ver {{version}}</h5>
     </b-row>
     <b-row>
       <p>
         Version Details: {{verDetails}}
         <br />
-        Ver Result 13.4: {{verResult}}
+        Ver Result {{version}}: {{verResult}}
       </p>
     </b-row>
     <hr />
@@ -21,8 +21,9 @@ export default {
   name: "Staff",
   data() {
     return {
-      verDetails: `เปลี่ยนหน้าโดยใช้ window.location.assign`,
-      verResult: `Redirect กลับไปที่ Homepage เพราะ path https://linebot-myevent.firebaseapp.com/staff/index?liff.state=?eventid=3`
+      version: "13.5.2",
+      verDetails: `แก้ condition เป็น == และเพิ่ม else ไปที่ google.com`,
+      verResult: `13.15.1-ยังพบปัญหาโหลดหน้าเรื่อยๆ`
     }
   },
 };
