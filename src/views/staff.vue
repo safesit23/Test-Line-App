@@ -4,7 +4,7 @@
       <h2>Test LINE API</h2>
     </b-row>
     <div>
-      <h6 style="color:red">DEBUG Ver10 [17:00,5pr2020]</h6>
+      <h6 style="color:green">DEBUG Ver11 [17:50,5pr2020]</h6>
       <div v-if="lineTest">
         <p>
           userLineId: {{ userLineId }}
@@ -44,11 +44,15 @@ export default {
     };
   },
   created() {
-    console.log("created-Line");
-    this.eventId = this.$route.query.eventid;
-    console.log("EventId = " + this.eventId);
-    const liffId = `${process.env.VUE_APP_LIFF_ID}`;
-    console.log("liffId: " + liffId);
+    console.log("1.) Created------");
+    const decode_url = decodeURIComponent(window.location.href);
+    console.log("Path-decode:" + decode_url);
+    console.log("C-Eventid-query: " + this.$route.query.eventid);
+    const newUrl = decodeURIComponent(window.location.search).replace("?liff.state=","");
+    console.log("Path-editPath: "+newUrl);
+    const params = new URLSearchParams(newUrl);
+    console.log("C-Eventid-param: "+params.get("eventid"));
+
     this.$liff
       .init({
         liffId: liffId
@@ -71,19 +75,17 @@ export default {
       .catch(err => {
         this.errormessage = "cannot connect LIFF";
       });
-    // console.log("PathBeforeLogin: " + path);
-    // const path = `${process.env.VUE_APP_WEB_URL}/staff?eventid=${eventId}`;
-    console.log("CurrentPath:" + window.location.href);
+      console.log("Path-After get Profile:" + window.location.href);
   },
   beforeMount() {
     console.log(">>beforeMount");
-    const decode_url = decodeURIComponent(window.location.href);
-    console.log("DecodePath:" + decode_url);
-    const queryString = decode_url.replace("?liff.state=","");
-    this.eventId = this.$route.query.eventid;
-    console.log("TypeA: " + this.$route.query.eventid);
-    const url = new URLSearchParams(queryString);
-    console.log("TypeB: " + url.get("eventid"));
+
+    const newUrl = decodeURIComponent(window.location.search).replace("?liff.state=","");
+    console.log("new Path: "+newUrl);
+    const params = new URLSearchParams(newUrl);
+    this.eventId = params.get("eventid");
+    console.log("EventId from Param: "+this.eventId);
+
   },
   methods: {
     changePage(path) {
