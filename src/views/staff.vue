@@ -1,17 +1,13 @@
 <template>
   <b-container fluid>
     <b-row align-h="center">
-      <img src="/img/logo.png" alt="Xentric logo" />
+      <h2>Test LINE API</h2>
     </b-row>
     <div>
-      <h6>DEBUG Ver6 [18:00,TUE31Mar2020]</h6>
+      <h6 style="color:red">DEBUG Ver10 [17:00,5pr2020]</h6>
       <div v-if="lineTest">
         <p>
           userLineId: {{ userLineId }}
-          <br />
-          lineContext: {{ line.lineContext }}
-          <br />
-          lineToken: {{ line.lineToken }}
           <br />
         </p>
       </div>
@@ -44,36 +40,24 @@ export default {
       eventId: "",
       response: null,
       errormessage: "-",
-      lineTest: false,
-      line: {
-        lineContext: null,
-        lineToken: null
-      }
+      lineTest: true
     };
   },
   created() {
     console.log("created-Line");
+    this.eventId = this.$route.query.eventid;
+    console.log("EventId = " + this.eventId);
+    const liffId = `${process.env.VUE_APP_LIFF_ID}`;
+    console.log("liffId: " + liffId);
     this.$liff
       .init({
-        liffId: `${process.env.VUE_APP_LIFF_ID}`
+        liffId: liffId
       })
       .then(() => {
         console.log("isInClient: " + liff.isInClient());
         if (!liff.isLoggedIn()) {
           liff.login();
         }
-        // const medium = "https://medium.com/linedevth/";
-        // const queryString = decodeURIComponent(window.location.search).replace(
-        //   "?liff.state=",
-        //   ""
-        // );
-        // const params = new URLSearchParams(queryString);
-        // const id = params.get("id");
-        // if (id != null && id != "") {
-        //   window.location.assign(medium + id);
-        // } else {
-        //   window.location.assign("https://developers.line.biz");
-        // }
         liff
           .getProfile()
           .then(profile => {
@@ -83,89 +67,25 @@ export default {
             console.log("error", err);
             this.errormessage = "cannot get line profile";
           });
-        this.line.lineContext = liff.getContext();
-        this.line.lineToken = liff.getDecodedIDToken();
       })
       .catch(err => {
         this.errormessage = "cannot connect LIFF";
       });
+    // console.log("PathBeforeLogin: " + path);
+    // const path = `${process.env.VUE_APP_WEB_URL}/staff?eventid=${eventId}`;
+    console.log("CurrentPath:" + window.location.href);
   },
   beforeMount() {
-    console.log("beforeMount");
+    console.log(">>beforeMount");
+    const decode_url = decodeURIComponent(window.location.href);
+    console.log("DecodePath:" + decode_url);
+    const queryString = decode_url.replace("?liff.state=","");
     this.eventId = this.$route.query.eventid;
-    console.log("EventId: " + this.eventId);
-
-    //Choosing Initial Page
-    // this.init();
-    this.init_Test_Line();
-    // this.init_Test_API();
+    console.log("TypeA: " + this.$route.query.eventid);
+    const url = new URLSearchParams(queryString);
+    console.log("TypeB: " + url.get("eventid"));
   },
   methods: {
-    init() {
-      api
-        .post("/findAccount", {
-          userLineId: this.userId,
-          eventId: this.eventid
-        })
-        .then(res => {
-          this.response = res.data;
-          if (this.response.hasStaff) {
-            this.$router.push({
-              path: `/staff/join/${this.response.eventName}`
-            });
-          } else {
-            this.$router.push({
-              path: `/staff/register/${this.response.eventName}`
-            });
-          }
-        })
-        .catch(err => {
-          console.log("API findAccount Error");
-        });
-    },
-
-    init_Test_Line() {
-      this.lineTest = true;
-    },
-
-    init_Test_API() {
-      console.log("init_Test_API");
-      api
-        .post("/findAccount", {
-          userLineId: "U73dd7aa2c2ce557fd139aa9807a3f512",
-          // userLineId: "1as",
-          eventId: "2"
-        })
-        .then(res => {
-          console.log("Account: " + res.data.message);
-          this.response = res.data.body;
-          console.log(
-            "Response: [hasStaff:" +
-              this.response.hasStaff +
-              "], [eventName:" +
-              this.response.eventName +
-              "]"
-          );
-          var isTrue = Boolean(this.response.hasStaff);
-          console.log("isTrue: " + isTrue);
-          if (isTrue) {
-            // changePage("/staff/join?eventid="+1)
-            this.$router.push("/staff/join?eventid=1");
-          } else {
-            // changePage("/staff/register?eventid=1"+1)
-            this.$router.push("/staff/register?eventid=1");
-          }
-          // Check profile if have profile
-          // if (this.response.hasStaff) {
-          //   this.$router.push({ path: `/staff/join/${res.data.body.eventName}` });
-          // } else {
-          //   this.$router.push({ path: `/staff/register/${res.data.body.eventName}` });
-          // }
-        })
-        .catch(err => {
-          this.errormessage = "API findAccount Error";
-        });
-    },
     changePage(path) {
       this.$router.push(path);
     }
