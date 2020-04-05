@@ -4,7 +4,9 @@
       <h2>Test LINE API</h2>
     </b-row>
     <div>
-      <h6 style="color:green">DEBUG Ver11 [17:50,5pr2020]</h6>
+      <h6 style="color:green">DEBUG Ver13 [18:13,5pr2020]</h6>
+      <p>Previous: Ver12 สามารถ get ค่าทั้ง 2 อย่างได้(เอาค่าจาก param)แต่ redirect ไป homepage</p>
+      <p>Ver 13: ใส่ liffid + push ไปหน้า join</p>
       <div v-if="lineTest">
         <p>
           userLineId: {{ userLineId }}
@@ -53,6 +55,8 @@ export default {
     const params = new URLSearchParams(newUrl);
     console.log("C-Eventid-param: "+params.get("eventid"));
 
+    const liffId = `${process.env.VUE_APP_LIFF_ID}`;
+    console.log("liffId: " + liffId);
     this.$liff
       .init({
         liffId: liffId
@@ -79,13 +83,12 @@ export default {
   },
   beforeMount() {
     console.log(">>beforeMount");
-
     const newUrl = decodeURIComponent(window.location.search).replace("?liff.state=","");
     console.log("new Path: "+newUrl);
     const params = new URLSearchParams(newUrl);
     this.eventId = params.get("eventid");
     console.log("EventId from Param: "+this.eventId);
-
+    this.$router.push("/staff/join?eventid=1");
   },
   methods: {
     changePage(path) {
