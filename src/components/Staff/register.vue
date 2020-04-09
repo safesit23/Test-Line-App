@@ -56,7 +56,7 @@ export default {
     await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
     if (liff.isInClient()) {
       //In LineApp
-      this.getUserProfile();
+      this.getUserLineProfile();
     } else {
       if (!liff.isLoggedIn()) {
         liff.login({ redirectUri: window.location.href });

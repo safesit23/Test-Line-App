@@ -21,8 +21,8 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.5.4",
-      verDetails: `ปรับปรุง Methods ให้มี async await`,
+      version: "13.5.5",
+      verDetails: `เกิด bug หน้า Register ไม่ขึ้นเพราะตั้งชื่อ method ไม่ตรง`,
       verResult: `ให้ redirect ไปที่ Staff Register (13.15.2-bug ที่ Desktop Browser)`
     }
   },

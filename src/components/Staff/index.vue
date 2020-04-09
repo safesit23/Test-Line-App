@@ -32,7 +32,7 @@ export default {
       this.getUserLineProfile();
     } else {
       if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: `${process.env.VUE_APP_APP_WEB_URL}?eventid=555` });
+        liff.login({ redirectUri: window.location.href });
       }
       this.getUserLineProfile();
     }
