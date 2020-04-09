@@ -3,8 +3,11 @@
     <b-row>
       <b-col class="text-center">
         <h3>ลงทะเบียนกับ Xentric</h3>
-        <h5>สวัสดี {{displayName}}</h5>
+        <h5 v-if="profile!=null">สวัสดี {{profile.displayName}}</h5>
       </b-col>
+    </b-row>
+    <b-row>
+      <!-- <img :src="profile.pictureUrl" alt="LineProfile"> -->
     </b-row>
     <b-row class="align-items-center mt-5">
       <b-col md="5">
@@ -46,20 +49,26 @@ export default {
       age: "",
       phone: "",
       email: "",
-      displayName: ""
+      profile: null
     };
   },
-  beforeMount() {
-    liff
-      .getProfile()
-      .then(profile => {
-        this.displayName = profile.displayName;
-      })
-      .catch(err => {
-        console.log("error", err);
-      });
+  async beforeMount() {
+    await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
+    if (liff.isInClient()) {
+      //In LineApp
+      this.getUserProfile();
+    } else {
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: window.location.href });
+      }
+      this.getUserLineProfile();
+    }
   },
   methods: {
+    async getUserLineProfile() {
+      this.profile = await liff.getProfile();
+      console.log("Profile: "+this.profile);
+    },
     onSubmit() {
       const staff = {
         firstname: this.firstname,
@@ -68,14 +77,14 @@ export default {
         age: this.age,
         phone: this.phone,
         email: this.email,
-        userLineId: "myId",
-        pictureUrl: "test",
+        userLineId: this.profile.userId,
+        pictureUrl: this.profile.pictureUrl,
         eventId: this.$route.query.eventid
       };
       api
         .post("/createStaff", staff)
         .then(res => {
-          console.log("After Created" + res.data.message);
+          console.log("After Created Staff:" + res.data.message);
         })
         .catch(err => {
           console.log(err);

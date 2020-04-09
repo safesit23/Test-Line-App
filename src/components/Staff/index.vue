@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-row>
       <p>
-        userLineId: {{ userLineId }}
+        userLineId: {{ profile.userId }}
         <br />
         eventId: {{eventId}}
         <br />
@@ -16,41 +16,28 @@ export default {
   name: "Staff",
   data() {
     return {
-      userLineId: "",
+      profile: "",
       eventId: "",
       errormessage: "-"
     };
   },
-  created() {
+  async created() {
     console.log("1.) Created------");
     const decode_url = decodeURIComponent(window.location.href);
     console.log("Path-decode:" + decode_url);
     //Line Init
-    const liffId = `${process.env.VUE_APP_LIFF_ID}`;
-    this.$liff
-      .init({
-        liffId: liffId
-      })
-      .then(() => {
-        console.log("1.1.) isInClient: " + liff.isInClient());
-        if (!liff.isLoggedIn()) {
-          liff.login();
-        }
-        liff
-          .getProfile()
-          .then(profile => {
-            let userLineId = profile.userId;
-            console.log("userLineId: " + this.userLineId);
-          })
-          .catch(err => {
-            console.log("error", err);
-            this.errormessage = "cannot get line profile";
-          });
-      })
-      .catch(err => {
-        this.errormessage = "cannot connect LIFF";
-      });
-    //   console.log("Path-After get Profile:" + window.location.href);
+    await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
+    if (liff.isInClient()) {
+      //In LineApp
+      this.getUserLineProfile();
+    } else {
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: `${process.env.VUE_APP_APP_WEB_URL}?eventid=555` });
+      }
+      this.getUserLineProfile();
+    }
+    // this.getAccount()
+
   },
   beforeMount() {
     console.log("2.) beforeMount");
@@ -64,11 +51,15 @@ export default {
     console.log("2.1.) EventId: " + this.eventId);
     this.initApi();
 
-    // const newPath = `${process.env.VUE_APP_WEB_URL}/staff/join?eventid=${this.eventId}`
-    // console.log(newPath);
-    // window.location.assign(newPath);
   },
   methods: {
+    async getUserLineProfile() {
+      this.profile = await liff.getProfile();
+      console.log("Profile: "+this.profile);
+    },
+    // async getAccount(){
+    //   //use api
+    // },
     initApi() {
       try {
         console.log("initApi");
@@ -76,10 +67,12 @@ export default {
           console.log("InitApi: has userId");
           const newPath = `${process.env.VUE_APP_WEB_URL}/staff/join?eventid=${this.eventId}`;
           console.log(newPath);
-          window.location.assign(newPath)
+          window.location.assign(newPath);
         } else {
           console.log("InitApi: not has userId");
-          window.location.assign("https://www.google.com")
+          const newPath = `${process.env.VUE_APP_WEB_URL}/staff/register?eventid=${this.eventId}`;
+          console.log(newPath);
+          window.location.assign(newPath);
         }
       } catch (error) {
         console.log("initApi error");

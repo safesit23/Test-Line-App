@@ -21,9 +21,9 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.5.2",
-      verDetails: `แก้ condition เป็น == และเพิ่ม else ไปที่ google.com`,
-      verResult: `13.15.1-ยังพบปัญหาโหลดหน้าเรื่อยๆ`
+      version: "13.5.4",
+      verDetails: `ปรับปรุง Methods ให้มี async await`,
+      verResult: `ให้ redirect ไปที่ Staff Register (13.15.2-bug ที่ Desktop Browser)`
     }
   },
 };
