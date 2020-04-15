@@ -1,85 +1,94 @@
-<template>
-  <b-container fluid>
-    <b-row>
-      <p>
-        userLineId: {{ profile.userId }}
-        <br />
-        eventId: {{eventId}}
-        <br />
-      </p>
-    </b-row>
-  </b-container>
-</template>
+<template></template>
 
 <script>
+import api from "../../utils/api";
+
 export default {
   name: "Staff",
   data() {
     return {
-      profile: "",
+      profile: null,
       eventId: "",
-      errormessage: "-"
+      errormessage: "-",
+      response: null
     };
   },
   async created() {
-    console.log("1.) Created------");
-    const decode_url = decodeURIComponent(window.location.href);
-    console.log("Path-decode:" + decode_url);
-    //Line Init
+    //Init Line LIFF
     await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
+    //In LineApp
     if (liff.isInClient()) {
-      //In LineApp
-      this.getUserLineProfile();
-    } else {
+    } else {  //Browser
       if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: window.location.href });
+        // liff.login({ redirectUri: window.location.href });
       }
-      this.getUserLineProfile();
     }
-    // this.getAccount()
-
-  },
-  beforeMount() {
-    console.log("2.) beforeMount");
-    //eventId
-    const newUrl = decodeURIComponent(window.location.search).replace(
-      "?liff.state=",
-      ""
-    );
-    const params = new URLSearchParams(newUrl);
-    this.eventId = params.get("eventid");
-    console.log("2.1.) EventId: " + this.eventId);
-    this.initApi();
-
+    this.getUserLineProfile();
+    this.eventId = this.getEventId();
+    // const staffStatus = this.getUserAccount(this.profile.userId, this.eventId);
+    const staffStatus = this.getUserAccount("U73dd7aa2c2ce557fd139aa9807a3f512", this.eventId);
+    this.joinEvent(staffStatus);
   },
   methods: {
-    async getUserLineProfile() {
-      this.profile = await liff.getProfile();
-      console.log("Profile: "+this.profile);
+    getEventId() {
+      const newUrl = decodeURIComponent(window.location.search).replace(
+        "?liff.state=",
+        ""
+      );
+      const params = new URLSearchParams(newUrl);
+      return params.get("eventid");
     },
-    // async getAccount(){
-    //   //use api
-    // },
-    initApi() {
+    async getUserLineProfile() {
+      console.log("getUserLineProfile");
+      this.profile = await liff.getProfile();
+      console.log("Profile: " + this.profile);
+    },
+    async getUserAccount(userId, eventId) {
+      console.log(`getUserAc(${userId}, ${eventId})`);
+      api
+        .post("/findAccount", {
+          userLineId: userId,
+          eventId: eventId
+        })
+        .then(res => {      //Missing Data Here! Contact Api to check it
+          console.log("My response");
+          this.response = res.data;
+          console.log(res.data);
+          let check = Boolean(res.data.hasStaff)
+          console.log("Check: "+check);
+        })
+        .catch(err => {
+          console.log("API findAccount Error");
+        });
+
+      // try {
+      //   let res = await api.post("/findAccount", {userLineId: userId,eventId: eventId})
+      //   console.log(res);
+      //   let check = Boolean(res.data.hasStaff)
+      // } catch (error) {
+      //   console.log("getUser Error: "+error);
+      // }
+      //   console.log("Check: "+check);
+      //   return check
+    },
+    joinEvent(staffStatus) {
+      console.log(`joinEvent(${staffStatus})`);
+      const join = `${process.env.VUE_APP_WEB_URL}/staff/join?eventid=${this.eventId}`;
+      const register = `${process.env.VUE_APP_WEB_URL}/staff/register?eventid=${this.eventId}`;
       try {
-        console.log("initApi");
-        if (this.eventId == 555) {
-          console.log("InitApi: has userId");
-          const newPath = `${process.env.VUE_APP_WEB_URL}/staff/join?eventid=${this.eventId}`;
-          console.log(newPath);
-          window.location.assign(newPath);
+        if (staffStatus && staffStatus!=null) {
+          console.log("has userId in db");
+          console.log("Goto:" + join);
+          window.location.assign(join);
         } else {
-          console.log("InitApi: not has userId");
-          const newPath = `${process.env.VUE_APP_WEB_URL}/staff/register?eventid=${this.eventId}`;
-          console.log(newPath);
-          window.location.assign(newPath);
+          console.log("not has userId in db");
+          console.log("Goto:" + register);
+          window.location.assign(register);
         }
       } catch (error) {
-        console.log("initApi error");
+        console.log("redirectPage Function error");
       }
     }
   }
 };
 </script>
-
-<style></style>

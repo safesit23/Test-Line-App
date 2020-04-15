@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import api from "../../utils/api"
+import api from "../../utils/api";
 export default {
   name: "StaffJoin",
   data() {
@@ -25,35 +25,40 @@ export default {
     await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
     if (liff.isInClient()) {
       //In LineApp
-      this.getUserLineProfile();
-    } else {
-      console.log("Out Line App");
-      // if (!liff.isLoggedIn()) {
-      //   liff.login({ redirectUri: `${process.env.VUE_APP_APP_WEB_URL}?eventid=555` });
-      // }
-      this.getUserLineProfile();
-      console.log("ID: "+this.$route.query.eventid);
-      await this.getEventName(this.$route.query.eventid);
+    } else {  //Out LineApp
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: window.location.href });
+      }
     }
+    this.getUserLineProfile();
+    this.eventId = this.$route.query.eventid;
+    console.log("ID: " + this.eventId);
+    this.getEventName(this.eventId);
   },
   methods: {
     async getUserLineProfile() {
       this.profile = await liff.getProfile();
-      console.log("Profile: "+this.profile);
+      console.log("Profile: " + this.profile);
     },
-    async getEventName(id){
-      this.getEventName = await api.get("/getEvent",{
-        eventId : id
-      })
-      .then(res =>{
-        console.log(res.data.event);
-        if(res.data.event.EVENT_NAME  !=null)
-        console.log("New");
+    async getEventName(id) {
+      console.log(`getEventName(${id})"`);
+      let res = await api.post("/getEvent", {eventId: id})
+      console.log(res.data);
+      if(res.data.event.EVENT_NAME != null){
         this.eventName = res.data.event.EVENT_NAME
-      })
-      .catch(err =>{
-        console.log(err);
-      })
+      }
+      // this.getEventName = await api.post("/getEvent", {
+      //     eventId: id
+      //   })
+      //   .then(res => {
+      //     console.log(res.data.event);
+      //     if (res.data.event.EVENT_NAME != null){
+      //       this.eventName = res.data.event.EVENT_NAME;
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     }
   },
   computed: {
