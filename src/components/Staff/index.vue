@@ -27,9 +27,9 @@ export default {
     try {
       this.eventId = this.getEventId();
       const profile = await this.getUserLineProfile();
-      this.userId = profile.userId
+      const userId = profile.userId
       console.log("UserId: "+userId);
-      const staffId = await this.getStaffId(this.userId, this.eventId);
+      const staffId = await this.getStaffId(userId, this.eventId);
       // const staffId = await this.getStaffId("Demo1", this.eventId);
       this.joinEvent(staffId);
     } catch (error) {
