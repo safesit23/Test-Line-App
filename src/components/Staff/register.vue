@@ -3,7 +3,7 @@
     <b-row>
       <b-col class="text-center">
         <h3>ลงทะเบียนกับ Xentric</h3>
-        <h5 v-if="profile!=null">สวัสดี {{profile.displayName}}</h5>
+        <h5 v-if="profile!=null">สวัสดี {{profile.displayName}} ({{eventId}})</h5>
       </b-col>
     </b-row>
     <b-row>
@@ -49,25 +49,29 @@ export default {
       age: "",
       phone: "",
       email: "",
-      profile: null
+      profile: null,
+      eventId: ""
     };
   },
   async beforeMount() {
+    this.eventId = this.$route.query.eventid;
+    console.log(`Register: EventId is ${eventId}`);
     await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
     if (liff.isInClient()) {
       //In LineApp
-      this.getUserLineProfile();
     } else {
       if (!liff.isLoggedIn()) {
         liff.login({ redirectUri: window.location.href });
       }
-      this.getUserLineProfile();
     }
+    this.getUserLineProfile();
+    console.log("Profile: "+this.profile);
+
   },
   methods: {
     async getUserLineProfile() {
       this.profile = await liff.getProfile();
-      console.log("Profile: "+this.profile);
+      console.log("Profile: " + this.profile);
     },
     onSubmit() {
       const staff = {
@@ -81,6 +85,7 @@ export default {
         pictureUrl: this.profile.pictureUrl,
         eventId: this.$route.query.eventid
       };
+      console.log(`Staff: ${staff}`);
       api
         .post("/createStaff", staff)
         .then(res => {
@@ -89,6 +94,11 @@ export default {
         .catch(err => {
           console.log(err);
         });
+      this.redirectPage()
+    },
+    redirectPage(){
+      const join = `${process.env.VUE_APP_WEB_URL}/staff/join?eventid=${this.eventId}`;
+      window.location.assign(join);
     }
   }
 };
