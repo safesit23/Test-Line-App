@@ -8,7 +8,7 @@
       <p>
         Version Details: {{verDetails}}
         <br />
-        Ver Result {{version}}: {{verResult}}
+        Ver History {{verHistory}}
       </p>
     </b-row>
     <hr />
@@ -21,9 +21,9 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.6.0",
-      verDetails: `Integrate Line with API + edit page JOIN can display name`,
-      verResult: `....`
+      version: "13.7.4",
+      verDetails: `(edit path) Integrate full flow use staffId instead status + this.sendMessage`,
+      verHistory:"13.6.1-[SUCCESS]Integrate Line with API + edit page JOIN can display name"
     }
   },
 };
