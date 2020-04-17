@@ -1,12 +1,16 @@
 <template>
-    <b-container>
-      <h1>Homepage Test Line</h1>
-    </b-container>
+  <b-container>
+      <h1>Test Line</h1>
+      <TestLIFF></TestLIFF>
+  </b-container>
 </template>
 
 <script>
-
+import TestLIFF from "../components/testLiff"
 export default {
-  name: 'Homepage'
-}
+  name: "Homepage",
+  components: {
+    TestLIFF
+  }
+};
 </script>
