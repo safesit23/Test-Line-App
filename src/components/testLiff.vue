@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <b-row v-if="profile!=null">
-      <img v-bind:src="profile.pictureUrl" alt="LinePicture" />
+      <b-avatar v-bind:src="profile.pictureUrl"></b-avatar>
     </b-row>
     <b-row v-if="profile!=null">
       <h3>Information (Profile)</h3>
@@ -11,14 +11,14 @@
     <b-row>
       <h3>Function sendMessage</h3>
       <b-col sm="12">
-        <h6>Basic Function</h6>
+        <h6>Function ส่งข้อความ</h6>
         <b-button variant="primary" @click="sendMessage()">Try to send</b-button>
       </b-col>
       <b-col sm="12">
-        <h6>Text Function</h6>
+        <h6>Function ส่งข้อความจากที่พิมพ์</h6>
         <p>You type: {{typeText}}</p>
-         <b-form-input v-model="message" placeholder="Enter message"></b-form-input>
-        <b-button variant="success" @click="sendMessage(message)">Try to send</b-button>
+        <b-form-input v-model="message" placeholder="Enter message"></b-form-input>
+        <b-button variant="success" @click="sendMessage(message)">SEND</b-button>
       </b-col>
     </b-row>
   </b-container>
@@ -54,7 +54,7 @@ export default {
   methods: {
     sendMessage(message) {
       console.log("sendMessage Func");
-      console.log("Message: "+message);
+      console.log("Message: " + message);
       if (message != null) {
         liff
           .sendMessages([
@@ -87,10 +87,10 @@ export default {
     }
   },
   computed: {
-      typeText() {
-          return this.message
-      }
-  },
+    typeText() {
+      return this.message;
+    }
+  }
 };
 </script>
 
