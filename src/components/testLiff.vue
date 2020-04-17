@@ -20,6 +20,10 @@
         <b-form-input v-model="message" placeholder="Enter message"></b-form-input>
         <b-button variant="success" @click="sendMessage(message)">SEND</b-button>
       </b-col>
+      <b-col sm="12">
+        <h6>Function ส่ง Sticker</h6>
+        <b-button variant="success" @click="sendSticker()">SEND</b-button>
+      </b-col>
     </b-row>
   </b-container>
 </template>
@@ -84,6 +88,22 @@ export default {
             console.log("error", err);
           });
       }
+    },
+    sendSticker() {
+      liff
+        .sendMessages([
+          {
+            type: "sticker",
+            packageId: "11537",
+            stickerId: "52002762"
+          }
+        ])
+        .then(() => {
+          console.log("message sent");
+        })
+        .catch(err => {
+          console.log("error", err);
+        });
     }
   },
   computed: {
