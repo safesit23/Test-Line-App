@@ -21,9 +21,9 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.7.5",
-      verDetails: `(edit path) Integrate full flow use staffId instead status + this.sendMessage`,
-      verHistory:"13.6.1-[SUCCESS]Integrate Line with API + edit page JOIN can display name"
+      version: "13.7.6",
+      verDetails: `Use button to confirm before change`,
+      verHistory:"13.7.5-[50%]Can click one time only"
     }
   },
 };
