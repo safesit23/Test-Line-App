@@ -3,7 +3,7 @@
     <b-row>
       <b-col class="text-center">
         <h3>ลงทะเบียนกับ Xentric</h3>
-        <h5 v-if="profile!=null">สวัสดี {{profile.displayName}} ({{eventId}})</h5>
+        <h5>สวัสดี {{profile.displayName}} ({{eventId}})</h5>
       </b-col>
     </b-row>
     <b-row>
@@ -54,7 +54,6 @@ export default {
     };
   },
   async beforeMount() {
-    this.eventId = this.$route.query.eventid;
     console.log(`Register: EventId is ${eventId}`);
     await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
     if (liff.isInClient()) {
@@ -65,6 +64,7 @@ export default {
       }
     }
     this.getUserLineProfile();
+    this.eventId = this.$route.query.eventid;
     console.log("Profile: "+this.profile);
 
   },

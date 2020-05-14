@@ -21,9 +21,9 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.7.6",
-      verDetails: `Use button to confirm before change`,
-      verHistory:"13.7.5-[50%]Can click one time only"
+      version: "13.7.4",
+      verDetails: `Rollback to .4`,
+      verHistory:""
     }
   },
 };
