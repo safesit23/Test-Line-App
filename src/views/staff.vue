@@ -16,8 +16,8 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.8.5",
-      verDetails: `Upgrade Theme / test func`,
+      version: "13.8.6",
+      verDetails: `Upgrade Theme / test fix`,
       verHistory: ""
     };
   }

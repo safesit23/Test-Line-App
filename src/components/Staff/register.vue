@@ -60,17 +60,17 @@ export default {
   },
   async beforeMount() {
     this.eventId = this.$route.query.eventid;
-    await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
-    if (liff.isInClient()) {
-      //In LineApp
-    } else {
-      if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: window.location.href });
-      }
-    }
-    console.log("EventId: " + this.eventId);
-    this.getUserLineProfile();
-    console.log("Profile: " + this.profile);
+    // await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
+    // if (liff.isInClient()) {
+    //   //In LineApp
+    // } else {
+    //   if (!liff.isLoggedIn()) {
+    //     liff.login({ redirectUri: window.location.href });
+    //   }
+    // }
+    // console.log("EventId: " + this.eventId);
+    // this.getUserLineProfile();
+    // console.log("Profile: " + this.profile);
   },
   methods: {
     async getUserLineProfile() {
@@ -85,33 +85,24 @@ export default {
         yearOfBirth: this.yearOfBirth,
         phone: this.phone,
         email: this.email,
-        userLineId: this.profile.userId,
-        pictureUrl: this.profile.pictureUrl,
+        // userLineId: this.profile.userId,
+        userLineId: "U73dd7aa2c2ce557fd139aa9807a3f512",
+        // pictureUrl: this.profile.pictureUrl,
+        pictureUrl: "https://profile.line-scdn.net/0hXOGOzM7gB2B6Ni8M9ZB4N0ZzCQ0NGAEoAlZPBwg0WVRQD0YzRQVNUlg_XgVSB0RkQVdMAQxkClQE",
         eventId: this.eventId
       };
       console.log(
         `Staff: ID-${staff.eventId},UId-${staff.userLineId},YOD-${staff.yearOfBirth}`
       );
       api
-        .post("/createStaff", {
-          firstname: this.firstname,
-          lastname: this.lastname,
-          nickname: this.nickname,
-          yearOfBirth: this.yearOfBirth,
-          phone: this.phone,
-          email: this.email,
-          userLineId: this.profile.userId,
-          pictureUrl: this.profile.pictureUrl,
-          eventId: this.eventId
-        })
+        .post("/createStaff", staff)
         .then(res => {
           console.log("After Created Staff:");
-          console.log(res.data.message);
+          console.log(res);
         })
         .catch(err => {
           console.log(err);
           console.log("Cannot create Staff:");
-          console.log(res.data.message);
         });
       this.redirectPage();
     },
