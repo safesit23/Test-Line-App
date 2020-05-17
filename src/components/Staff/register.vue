@@ -3,13 +3,18 @@
     <b-row>
       <b-col class="text-center">
         <h3>ลงทะเบียนกับ Xentric</h3>
-        <h5>สวัสดี {{profile.displayName}} ({{eventId}})</h5>
+        <div v-if="profile!=null">
+          <h5>สวัสดี {{profile.displayName}}</h5>
+        </div>
+        <div v-if="eventId!=null">
+          <h5>EventId = {{eventId}}</h5>
+        </div>
       </b-col>
     </b-row>
-    <b-row>
-      <!-- <img :src="profile.pictureUrl" alt="LineProfile"> -->
+    <b-row class="d-flex align-items-center mt-2" v-if="profile!=null">
+      <b-avatar :src="profile.pictureUrl" size="4rem"></b-avatar>
     </b-row>
-    <b-row class="align-items-center mt-5">
+    <b-row class="align-items-center mt-2">
       <b-col md="5">
         <b-form @submit="onSubmit">
           <b-form-group label="ชื่อ:">
@@ -21,8 +26,8 @@
           <b-form-group label="ชื่อเล่น:">
             <b-form-input v-model="nickname"></b-form-input>
           </b-form-group>
-          <b-form-group label="อายุ:">
-            <b-form-input v-model="age"></b-form-input>
+          <b-form-group label="ปีเกิด:">
+            <b-form-input v-model="yearOfBirth"></b-form-input>
           </b-form-group>
           <b-form-group label="เบอร์โทร:">
             <b-form-input v-model="phone"></b-form-input>
@@ -30,7 +35,7 @@
           <b-form-group label="อีเมลล์:">
             <b-form-input v-model="email" type="email"></b-form-input>
           </b-form-group>
-          <b-button type="submit" variant="primary">Submit</b-button>
+          <b-button class="my-5" block type="submit" variant="primary">Submit</b-button>
         </b-form>
       </b-col>
     </b-row>
@@ -46,7 +51,7 @@ export default {
       firstname: "",
       lastname: "",
       nickname: "",
-      age: "",
+      yearOfBirth: "",
       phone: "",
       email: "",
       profile: null,
@@ -54,7 +59,7 @@ export default {
     };
   },
   async beforeMount() {
-    console.log(`Register: EventId is ${eventId}`);
+    this.eventId = this.$route.query.eventid;
     await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
     if (liff.isInClient()) {
       //In LineApp
@@ -63,10 +68,9 @@ export default {
         liff.login({ redirectUri: window.location.href });
       }
     }
+    console.log("EventId: " + this.eventId);
     this.getUserLineProfile();
-    this.eventId = this.$route.query.eventid;
-    console.log("Profile: "+this.profile);
-
+    console.log("Profile: " + this.profile);
   },
   methods: {
     async getUserLineProfile() {
@@ -78,26 +82,43 @@ export default {
         firstname: this.firstname,
         lastname: this.lastname,
         nickname: this.nickname,
-        age: this.age,
+        yearOfBirth: this.yearOfBirth,
         phone: this.phone,
         email: this.email,
         userLineId: this.profile.userId,
         pictureUrl: this.profile.pictureUrl,
-        eventId: this.$route.query.eventid
+        eventId: this.eventId
       };
-      console.log(`Staff: ${staff}`);
+      console.log(
+        `Staff: ID-${staff.eventId},UId-${staff.userLineId},YOD-${staff.yearOfBirth}`
+      );
       api
-        .post("/createStaff", staff)
+        .post("/createStaff", {
+          firstname: this.firstname,
+          lastname: this.lastname,
+          nickname: this.nickname,
+          yearOfBirth: this.yearOfBirth,
+          phone: this.phone,
+          email: this.email,
+          userLineId: this.profile.userId,
+          pictureUrl: this.profile.pictureUrl,
+          eventId: this.eventId
+        })
         .then(res => {
-          console.log("After Created Staff:" + res.data.message);
+          console.log("After Created Staff:");
+          console.log(res.data.message);
         })
         .catch(err => {
           console.log(err);
+          console.log("Cannot create Staff:");
+          console.log(res.data.message);
         });
-      this.redirectPage()
+      this.redirectPage();
     },
-    redirectPage(){
+    redirectPage() {
+      console.log("Redirect Page");
       const join = `${process.env.VUE_APP_WEB_URL}/staff/join?eventid=${this.eventId}`;
+      console.log("JOIN: " + join);
       window.location.assign(join);
     }
   }
