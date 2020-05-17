@@ -1,17 +1,12 @@
 <template>
   <b-container fluid>
+    <b-row class="my-4">
+      <b-img center src="/img/xentric_logo.png" alt="Xentric Logo" height="50px" />
+    </b-row>
     <b-row align-h="center">
-      <h2>Test Staff Flow</h2>
-      <h5 style="color:blue">ver {{version}}</h5>
+      <p>Version: {{version}}({{verDetails}})</p>
     </b-row>
-    <b-row>
-      <p>
-        Version Details: {{verDetails}}
-        <br />
-        Ver History {{verHistory}}
-      </p>
-    </b-row>
-    <hr />
+
     <router-view></router-view>
   </b-container>
 </template>
@@ -21,12 +16,17 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.7.4",
-      verDetails: `Rollback to .4`,
-      verHistory:""
-    }
-  },
+      version: "13.8.1",
+      verDetails: `Upgrade Theme`,
+      verHistory: ""
+    };
+  }
 };
 </script>
 
-<style></style>
+<style>
+body {
+  background-color: #241d49;
+  color: white;
+}
+</style>
