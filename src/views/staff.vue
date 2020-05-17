@@ -16,8 +16,8 @@ export default {
   name: "Staff",
   data() {
     return {
-      version: "13.8.6",
-      verDetails: `Upgrade Theme / test fix`,
+      version: "13.8.8",
+      verDetails: `Upgrade Theme / use func Click instead form`,
       verHistory: ""
     };
   }

@@ -16,7 +16,6 @@
     </b-row>
     <b-row class="align-items-center mt-2">
       <b-col md="5">
-        <b-form @submit="onSubmit">
           <b-form-group label="ชื่อ:">
             <b-form-input v-model="firstname"></b-form-input>
           </b-form-group>
@@ -35,8 +34,7 @@
           <b-form-group label="อีเมลล์:">
             <b-form-input v-model="email" type="email"></b-form-input>
           </b-form-group>
-          <b-button class="my-5" block type="submit" variant="primary">Submit</b-button>
-        </b-form>
+          <b-button class="my-5" block type="submit" variant="primary" @click="onSubmit()">Submit</b-button>
       </b-col>
     </b-row>
   </b-container>
@@ -60,17 +58,17 @@ export default {
   },
   async beforeMount() {
     this.eventId = this.$route.query.eventid;
-    // await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
-    // if (liff.isInClient()) {
-    //   //In LineApp
-    // } else {
-    //   if (!liff.isLoggedIn()) {
-    //     liff.login({ redirectUri: window.location.href });
-    //   }
-    // }
-    // console.log("EventId: " + this.eventId);
-    // this.getUserLineProfile();
-    // console.log("Profile: " + this.profile);
+    await this.$liff.init({ liffId: `${process.env.VUE_APP_LIFF_ID}` });
+    if (liff.isInClient()) {
+      //In LineApp
+    } else {
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: window.location.href });
+      }
+    }
+    console.log("EventId: " + this.eventId);
+    this.getUserLineProfile();
+    console.log("Profile: " + this.profile);
   },
   methods: {
     async getUserLineProfile() {
@@ -78,6 +76,7 @@ export default {
       console.log("Profile: " + this.profile);
     },
     onSubmit() {
+      console.log("OnSubmit");
       const staff = {
         firstname: this.firstname,
         lastname: this.lastname,
@@ -85,10 +84,8 @@ export default {
         yearOfBirth: this.yearOfBirth,
         phone: this.phone,
         email: this.email,
-        // userLineId: this.profile.userId,
-        userLineId: "U73dd7aa2c2ce557fd139aa9807a3f512",
-        // pictureUrl: this.profile.pictureUrl,
-        pictureUrl: "https://profile.line-scdn.net/0hXOGOzM7gB2B6Ni8M9ZB4N0ZzCQ0NGAEoAlZPBwg0WVRQD0YzRQVNUlg_XgVSB0RkQVdMAQxkClQE",
+        userLineId: this.profile.userId,
+        pictureUrl: this.profile.pictureUrl,
         eventId: this.eventId
       };
       console.log(
@@ -96,7 +93,7 @@ export default {
       );
       api
         .post("/createStaff", staff)
-        .then(res => {
+        .then(res=>{
           console.log("After Created Staff:");
           console.log(res);
         })
