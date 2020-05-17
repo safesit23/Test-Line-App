@@ -1,4 +1,8 @@
 <template>
+<div>
+  <!-- <h4>ยืนยันการลงทะเบียน</h4>
+  <button @click="confirm()">กดยืนยัน</button> -->
+</div>
 </template>
 
 <script>
@@ -9,8 +13,10 @@ export default {
   data() {
     return {
       userId: "",
+      staffId: "",
       eventId: "",
-      errormessage: "-"
+      errormessage: "-",
+      path: ""
     };
   },
   async beforeMount () {
@@ -29,11 +35,12 @@ export default {
       const profile = await this.getUserLineProfile();
       const userId = profile.userId
       console.log("UserId: "+userId);
-      const staffId = await this.getStaffId(userId, this.eventId);
+      let staffId
+      staffId = await this.getStaffId(userId, this.eventId);
       // const staffId = await this.getStaffId("Demo1", this.eventId);
       this.joinEvent(staffId);
     } catch (error) {
-      console.log("ERROR to join event");
+      console.log("init Function Error"+error);
     }
   },
   methods: {
@@ -75,13 +82,15 @@ export default {
       try {
         if (staffId != null) {
           console.log("GotoJOIN:" + join);
+          this.path = join
           window.location.assign(join);
         } else {
           console.log("GotoREGIS:" + register);
+          this.path = register
           window.location.assign(register);
         }
       } catch (error) {
-        console.log("redirectPage Function error");
+        console.log("joinEvent Function error");
       }
     }
   }
